@@ -5,20 +5,19 @@
 		<title></title>
 	</head>
 	<style type="text/css">
-		.header-map{
+		.header-map {
 			height: 1000px;
 			width: 1000px;
-			
 		}
-		#container{
-				
-				width: 800px;
-				height: 800px;
-			}
+		
+		#container {
+			width: 800px;
+			height: 800px;
+		}
 	</style>
+
 	<body>
-		
-		
+
 		<div class="header-map">
 			<input id="tipinput" type="search" />
 			<div id="container"></div>
@@ -26,9 +25,9 @@
 	</body>
 	<script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=48d47e96c0f939fc4e22b795c5b6cfe1&plugin=AMap.Geocoder,AMap.Autocomplete,AMap.PlaceSearch"></script>
 	<script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
+	<script type="text/javascript" src="json/jquery-1.11.3.js">
+	</script>
 	<script type="text/javascript">
-
-
 		map = new AMap.Map("container", {
 			resizeEnable: true,
 			zoom: 13
@@ -49,8 +48,8 @@
 			});
 			map.addControl(geolocation);
 			geolocation.getCurrentPosition();
-//			AMap.event.addListener(geolocation, 'complete', onComplete); //返回定位信息
-//			AMap.event.addListener(geolocation, 'error', onError); //返回定位出错信息
+			//			AMap.event.addListener(geolocation, 'complete', onComplete); //返回定位信息
+			//			AMap.event.addListener(geolocation, 'error', onError); //返回定位出错信息
 		});
 
 		//输入提示
@@ -72,67 +71,61 @@
 				map.setZoom(15);
 				map.setCenter(e.poi.location);
 			}
-		}	
-		var markers=[];//声明一个数组
-		(function(){
+		}
 
-			$.ajax({	
-				type: "get", //提交请求的方式
-				dataType: 'json',
-				cache: true, //是否有缓存
-				url: "json/position.json", //访问servlet的路径
-				//dataType:"json",//没有这个，将把后台放会的json解析成字符串
-				data: {
-					
-				},
-				async: false, //是否异步
-				error: function(request) { //请求出错
-					
-				},
-				success: function(data) { //获得返回值
-					
-					console.log(data)//包含经纬度的数据
-					for(var i = 0;i<data.length;i++){
-						var id = data[i].id;
-						var dili = [data[i].longitude, data[i].latitude];//经纬度
-//						console.log(dili)
-						var address = data[i].location;
-//						marker.id=id
-						var marker = new AMap.Marker({ //加点
-							map: map,
-//							icon:"icon/marker.png", 
-							position: dili,
-					        icon: new AMap.Icon({            
-					            size: new AMap.Size(80, 80),  //图标大小
-					            image: "json/marker.png",
-//					             imageOffset: new AMap.Pixel(0, -60)
-					        }),    
-							
-						});
-						markers.push(marker)//添加marker点
-						
-						//给marker绑定一个id
-						marker.id = id;
-//						console.log(markerid)
-						 marker.setMap(map);
-						marker.setLabel({//label默认蓝框白底左上角显示，样式className为：amap-marker-label
-//						        offset: new AMap.Pixel(20, 20),//修改label相对于maker的位置
-//						        content: "<div class='marker-address'>" + address + "</div>"
-						  });
-						console.log(marker)
-						AMap.event.addListener(marker, 'click', function(e) {//地图上的marker点击事件 根据id跳转
-							var listid = e.target.id//找到对应的id
-//							console.log(id)
-							console.log(listid);
+		var data = [{
+				"latitude": "22.55874",
+				"longitude": "113.944088",
+				"id": 1
+			},
+			{
+				"latitude": "22.54810",
+				"longitude": "113.922022",
+				"id": 2
+			},
+			{
+				"latitude": "22.52750",
+				"longitude": "113.911000",
+				"id": 3
+			}
 
-						});
-					}
-					
-					
-					
-				}
-			});
+		]
+
+		var markers = []; //声明一个数组
+		(function() {
+
+			console.log(data) //包含经纬度的数据
+			for(var i = 0; i < data.length; i++) {
+				var id = data[i].id;
+				var dili = [data[i].longitude, data[i].latitude]; //经纬度
+				var address = data[i].location;
+				var marker = new AMap.Marker({ //加点
+					map: map,
+					position: dili,
+					icon: new AMap.Icon({
+						size: new AMap.Size(80, 80), //图标大小
+						image: "img/marker.png",
+					}),
+
+				});
+				markers.push(marker) //添加marker点
+
+				//给marker绑定一个id
+				marker.id = id;
+				marker.setMap(map);
+				marker.setLabel({ //label默认蓝框白底左上角显示，样式className为：amap-marker-label
+					//						        offset: new AMap.Pixel(20, 20),//修改label相对于maker的位置
+					//						        content: "<div class='marker-address'>" + address + "</div>"
+				});
+				console.log(marker)
+				AMap.event.addListener(marker, 'click', function(e) { //地图上的marker点击事件 根据id跳转
+					var listid = e.target.id //找到对应的id
+					alert(listid);
+
+				});
+			}
+
 		})();
-
 	</script>
+
 </html>
